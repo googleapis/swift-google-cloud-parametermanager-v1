@@ -17,11 +17,11 @@
 import Foundation
 @_spi(GoogleCloudInternal) import GoogleWKT
 
-/// Message for requesting list of Parameters
-public struct ListParametersRequest: Codable, Equatable, GoogleWKT._AnyPackable,
+/// Message for requesting list of Templates
+public struct ListTemplatesRequest: Codable, Equatable, GoogleWKT._AnyPackable,
   Sendable
 {
-  /// Required. Parent value for ListParametersRequest in the format
+  /// Required. Parent value for ListTemplatesRequest in the format
   /// `projects/*/locations/*`.
   public var parent: Swift.String = Swift.String()
 
@@ -29,10 +29,10 @@ public struct ListParametersRequest: Codable, Equatable, GoogleWKT._AnyPackable,
   /// requested. If unspecified, server will pick an appropriate default.
   public var pageSize: Swift.Int32 = Swift.Int32()
 
-  /// Optional. A page token, received from a previous `ListParameters` call.
+  /// Optional. A page token, received from a previous `ListTemplates` call.
   /// Provide this to retrieve the subsequent page.
   ///
-  /// When paginating, all other parameters provided to `ListParameters` must
+  /// When paginating, all other parameters provided to `ListTemplates` must
   /// match the call that provided the page token.
   public var pageToken: Swift.String = Swift.String()
 
@@ -44,7 +44,7 @@ public struct ListParametersRequest: Codable, Equatable, GoogleWKT._AnyPackable,
 
   @_spi(GoogleCloudInternal) public var _unknownFields: GoogleWKT._UnknownFields = .init()
 
-  /// Initialize a new instance of `ListParametersRequest`.
+  /// Initialize a new instance of `ListTemplatesRequest`.
   public init() {}
 
   /// Use `config` to return a new instance of this object, with some fields updated.
@@ -52,7 +52,7 @@ public struct ListParametersRequest: Codable, Equatable, GoogleWKT._AnyPackable,
   /// Commonly used to initialize the value, for example:
   ///
   /// ```
-  /// let value = ListParametersRequest().with { $0.parent = ... }
+  /// let value = ListTemplatesRequest().with { $0.parent = ... }
   /// ```
   public func with(_ config: (inout Self) throws -> Swift.Void) rethrows -> Self {
     var copy = self
@@ -117,7 +117,7 @@ public struct ListParametersRequest: Codable, Equatable, GoogleWKT._AnyPackable,
   }
 
   public static var _anyTypeUrl: Swift.String {
-    return "type.googleapis.com/google.cloud.parametermanager.v1.ListParametersRequest"
+    return "type.googleapis.com/google.cloud.parametermanager.v1.ListTemplatesRequest"
   }
   public init(fromAny any: GoogleWKT.`Any`) throws {
     self = try GoogleWKT._slowAnyDeserialize(Self.self, from: any)

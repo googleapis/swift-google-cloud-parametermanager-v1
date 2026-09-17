@@ -16,17 +16,18 @@
 
 import Foundation
 
-/// Option for requesting only metadata, or user provided payload
-/// of a ParameterVersion or TemplateVersion resource.
-public enum View: Codable, Equatable, Sendable {
+/// Option to specify the format of a Template resource (YAML /
+/// JSON). This option is user specified at the time of creation of the resource
+/// and is immutable. Templates do not support the UNFORMATTED format.
+/// Additional values may be added in the future.
+public enum TemplateFormat: Codable, Equatable, Sendable {
   /// The default / unset value.
-  /// The API will default to the FULL view.
+  /// The API will default to the YAML format.
   case unspecified
-  /// Include only the metadata for the resource.
-  case basic
-  /// Include metadata & other relevant payload data as well.
-  /// This is the default view.
-  case full
+  /// YAML format.
+  case yaml
+  /// JSON format.
+  case json
   /// Encodes an unknown integer value.
   ///
   /// The most common cause for an unknown values is for the service to send
@@ -50,8 +51,8 @@ public enum View: Codable, Equatable, Sendable {
   public var intValue: Int? {
     switch self {
     case .unspecified: return 0
-    case .basic: return 1
-    case .full: return 2
+    case .yaml: return 1
+    case .json: return 2
     case .unknownIntValue(let v): return v
     case .unknownStringValue: return nil
     }
@@ -62,9 +63,9 @@ public enum View: Codable, Equatable, Sendable {
   /// If the enumeration was initialized with an unknown integer value, this returns `nil`.
   public var stringValue: Swift.String? {
     switch self {
-    case .unspecified: return "VIEW_UNSPECIFIED"
-    case .basic: return "BASIC"
-    case .full: return "FULL"
+    case .unspecified: return "TEMPLATE_FORMAT_UNSPECIFIED"
+    case .yaml: return "TEMPLATE_FORMAT_YAML"
+    case .json: return "TEMPLATE_FORMAT_JSON"
     case .unknownIntValue: return nil
     case .unknownStringValue(let v): return v
     }
@@ -72,24 +73,24 @@ public enum View: Codable, Equatable, Sendable {
 
   /// Initialize from a string value.
   ///
-  /// If the value is unknown, this initializes to [`unknownStringValue`](doc:View/unknownStringValue(_:)).
+  /// If the value is unknown, this initializes to [`unknownStringValue`](doc:TemplateFormat/unknownStringValue(_:)).
   public init(stringValue: Swift.String) {
     switch stringValue {
-    case "VIEW_UNSPECIFIED": self = .unspecified
-    case "BASIC": self = .basic
-    case "FULL": self = .full
+    case "TEMPLATE_FORMAT_UNSPECIFIED": self = .unspecified
+    case "TEMPLATE_FORMAT_YAML": self = .yaml
+    case "TEMPLATE_FORMAT_JSON": self = .json
     default: self = .unknownStringValue(stringValue)
     }
   }
 
   /// Initialize from an integer value.
   ///
-  /// If the value is unknown, this initializes to [`unknownIntValue`](doc:View/unknownIntValue(_:)).
+  /// If the value is unknown, this initializes to [`unknownIntValue`](doc:TemplateFormat/unknownIntValue(_:)).
   public init(intValue: Int) {
     switch intValue {
     case 0: self = .unspecified
-    case 1: self = .basic
-    case 2: self = .full
+    case 1: self = .yaml
+    case 2: self = .json
     default: self = .unknownIntValue(intValue)
     }
   }
@@ -115,9 +116,9 @@ public enum View: Codable, Equatable, Sendable {
   public func encode(to encoder: Encoder) throws {
     var container = encoder.singleValueContainer()
     switch self {
-    case .unspecified: return try container.encode("VIEW_UNSPECIFIED")
-    case .basic: return try container.encode("BASIC")
-    case .full: return try container.encode("FULL")
+    case .unspecified: return try container.encode("TEMPLATE_FORMAT_UNSPECIFIED")
+    case .yaml: return try container.encode("TEMPLATE_FORMAT_YAML")
+    case .json: return try container.encode("TEMPLATE_FORMAT_JSON")
     case .unknownIntValue(let v): return try container.encode(v)
     case .unknownStringValue(let v): return try container.encode(v)
     }

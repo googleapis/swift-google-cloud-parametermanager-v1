@@ -17,21 +17,17 @@
 import Foundation
 @_spi(GoogleCloudInternal) import GoogleWKT
 
-/// Message for storing a ParameterVersion resource's payload data
-public struct ParameterVersionPayload: Codable, Equatable, GoogleWKT._AnyPackable,
+/// Message for getting a Template
+public struct GetTemplateRequest: Codable, Equatable, GoogleWKT._AnyPackable,
   Sendable
 {
-  /// Required. bytes data for storing payload.
-  public var data: Foundation.Data = Foundation.Data()
-
-  /// Optional. [Optional] The integrity checksum of the payload.
-  /// If provided, the server will verify that the checksum matches the payload.
-  /// If not provided, the server will generate the checksum.
-  public var dataCrc32C: Swift.Int64? = nil
+  /// Required. Name of the resource in the format
+  /// `projects/*/locations/*/templates/*`.
+  public var name: Swift.String = Swift.String()
 
   @_spi(GoogleCloudInternal) public var _unknownFields: GoogleWKT._UnknownFields = .init()
 
-  /// Initialize a new instance of `ParameterVersionPayload`.
+  /// Initialize a new instance of `GetTemplateRequest`.
   public init() {}
 
   /// Use `config` to return a new instance of this object, with some fields updated.
@@ -39,7 +35,7 @@ public struct ParameterVersionPayload: Codable, Equatable, GoogleWKT._AnyPackabl
   /// Commonly used to initialize the value, for example:
   ///
   /// ```
-  /// let value = ParameterVersionPayload().with { $0.data = ... }
+  /// let value = GetTemplateRequest().with { $0.name = ... }
   /// ```
   public func with(_ config: (inout Self) throws -> Swift.Void) rethrows -> Self {
     var copy = self
@@ -53,21 +49,18 @@ public struct ParameterVersionPayload: Codable, Equatable, GoogleWKT._AnyPackabl
     init(stringValue: Swift.String) { self.stringValue = stringValue }
     init?(intValue: Swift.Int) { nil }
 
-    static let data = CodingKeys(stringValue: "data")
-    static let dataCrc32C = CodingKeys(stringValue: "dataCrc32c")
+    static let name = CodingKeys(stringValue: "name")
 
     static let _knownKeys: Set<Swift.String> = [
-      "data",
-      "dataCrc32c",
+      "name"
     ]
   }
 
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    if let value = try container.decodeIfPresent(Foundation.Data.self, forKey: .data) {
-      self.data = value
+    if let value = try container.decodeIfPresent(Swift.String.self, forKey: .name) {
+      self.name = value
     }
-    self.dataCrc32C = try container.decodeIfPresent(Swift.Int64.self, forKey: .dataCrc32C)
     for key in container.allKeys where !CodingKeys._knownKeys.contains(key.stringValue) {
       self._unknownFields.json[key.stringValue] = try container.decode(
         GoogleWKT.Value.self, forKey: key)
@@ -76,15 +69,14 @@ public struct ParameterVersionPayload: Codable, Equatable, GoogleWKT._AnyPackabl
 
   public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
-    try container.encode(self.data, forKey: .data)
-    try container.encodeIfPresent(self.dataCrc32C, forKey: .dataCrc32C)
+    try container.encode(self.name, forKey: .name)
     for (key, value) in self._unknownFields.json {
       try container.encode(value, forKey: CodingKeys(stringValue: key))
     }
   }
 
   public static var _anyTypeUrl: Swift.String {
-    return "type.googleapis.com/google.cloud.parametermanager.v1.ParameterVersionPayload"
+    return "type.googleapis.com/google.cloud.parametermanager.v1.GetTemplateRequest"
   }
   public init(fromAny any: GoogleWKT.`Any`) throws {
     self = try GoogleWKT._slowAnyDeserialize(Self.self, from: any)

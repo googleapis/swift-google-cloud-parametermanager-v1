@@ -17,34 +17,38 @@
 import Foundation
 @_spi(GoogleCloudInternal) import GoogleWKT
 
-/// Message for requesting list of Parameters
-public struct ListParametersRequest: Codable, Equatable, GoogleWKT._AnyPackable,
+/// Message for creating a Template
+public struct CreateTemplateRequest: Codable, Equatable, GoogleWKT._AnyPackable,
   Sendable
 {
-  /// Required. Parent value for ListParametersRequest in the format
+  /// Required. Value for parent in the format
   /// `projects/*/locations/*`.
   public var parent: Swift.String = Swift.String()
 
-  /// Optional. Requested page size. Server may return fewer items than
-  /// requested. If unspecified, server will pick an appropriate default.
-  public var pageSize: Swift.Int32 = Swift.Int32()
+  /// Required. Id of the Template resource
+  public var templateId: Swift.String = Swift.String()
 
-  /// Optional. A page token, received from a previous `ListParameters` call.
-  /// Provide this to retrieve the subsequent page.
+  /// Required. The Template resource being created
+  public var template: Template? = nil
+
+  /// Optional. An optional request ID to identify requests. Specify a unique
+  /// request ID so that if you must retry your request, the server will know to
+  /// ignore the request if it has already been completed. The server will
+  /// guarantee that for at least 60 minutes since the first request.
   ///
-  /// When paginating, all other parameters provided to `ListParameters` must
-  /// match the call that provided the page token.
-  public var pageToken: Swift.String = Swift.String()
-
-  /// Optional. Filtering results
-  public var filter: Swift.String = Swift.String()
-
-  /// Optional. Hint for how to order the results
-  public var orderBy: Swift.String = Swift.String()
+  /// For example, consider a situation where you make an initial request and the
+  /// request times out. If you make the request again with the same request
+  /// ID, the server can check if original operation with the same request ID
+  /// was received, and if so, will ignore the second request. This prevents
+  /// clients from accidentally creating duplicate commitments.
+  ///
+  /// The request ID must be a valid UUID with the exception that zero UUID is
+  /// not supported (00000000-0000-0000-0000-000000000000).
+  public var requestId: Swift.String = Swift.String()
 
   @_spi(GoogleCloudInternal) public var _unknownFields: GoogleWKT._UnknownFields = .init()
 
-  /// Initialize a new instance of `ListParametersRequest`.
+  /// Initialize a new instance of `CreateTemplateRequest`.
   public init() {}
 
   /// Use `config` to return a new instance of this object, with some fields updated.
@@ -52,7 +56,7 @@ public struct ListParametersRequest: Codable, Equatable, GoogleWKT._AnyPackable,
   /// Commonly used to initialize the value, for example:
   ///
   /// ```
-  /// let value = ListParametersRequest().with { $0.parent = ... }
+  /// let value = CreateTemplateRequest().with { $0.parent = ... }
   /// ```
   public func with(_ config: (inout Self) throws -> Swift.Void) rethrows -> Self {
     var copy = self
@@ -67,17 +71,15 @@ public struct ListParametersRequest: Codable, Equatable, GoogleWKT._AnyPackable,
     init?(intValue: Swift.Int) { nil }
 
     static let parent = CodingKeys(stringValue: "parent")
-    static let pageSize = CodingKeys(stringValue: "pageSize")
-    static let pageToken = CodingKeys(stringValue: "pageToken")
-    static let filter = CodingKeys(stringValue: "filter")
-    static let orderBy = CodingKeys(stringValue: "orderBy")
+    static let templateId = CodingKeys(stringValue: "templateId")
+    static let template = CodingKeys(stringValue: "template")
+    static let requestId = CodingKeys(stringValue: "requestId")
 
     static let _knownKeys: Set<Swift.String> = [
       "parent",
-      "pageSize",
-      "pageToken",
-      "filter",
-      "orderBy",
+      "templateId",
+      "template",
+      "requestId",
     ]
   }
 
@@ -86,17 +88,12 @@ public struct ListParametersRequest: Codable, Equatable, GoogleWKT._AnyPackable,
     if let value = try container.decodeIfPresent(Swift.String.self, forKey: .parent) {
       self.parent = value
     }
-    if let value = try container.decodeIfPresent(Swift.Int32.self, forKey: .pageSize) {
-      self.pageSize = value
+    if let value = try container.decodeIfPresent(Swift.String.self, forKey: .templateId) {
+      self.templateId = value
     }
-    if let value = try container.decodeIfPresent(Swift.String.self, forKey: .pageToken) {
-      self.pageToken = value
-    }
-    if let value = try container.decodeIfPresent(Swift.String.self, forKey: .filter) {
-      self.filter = value
-    }
-    if let value = try container.decodeIfPresent(Swift.String.self, forKey: .orderBy) {
-      self.orderBy = value
+    self.template = try container.decodeIfPresent(Template.self, forKey: .template)
+    if let value = try container.decodeIfPresent(Swift.String.self, forKey: .requestId) {
+      self.requestId = value
     }
     for key in container.allKeys where !CodingKeys._knownKeys.contains(key.stringValue) {
       self._unknownFields.json[key.stringValue] = try container.decode(
@@ -107,17 +104,16 @@ public struct ListParametersRequest: Codable, Equatable, GoogleWKT._AnyPackable,
   public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     try container.encode(self.parent, forKey: .parent)
-    try container.encode(self.pageSize, forKey: .pageSize)
-    try container.encode(self.pageToken, forKey: .pageToken)
-    try container.encode(self.filter, forKey: .filter)
-    try container.encode(self.orderBy, forKey: .orderBy)
+    try container.encode(self.templateId, forKey: .templateId)
+    try container.encodeIfPresent(self.template, forKey: .template)
+    try container.encode(self.requestId, forKey: .requestId)
     for (key, value) in self._unknownFields.json {
       try container.encode(value, forKey: CodingKeys(stringValue: key))
     }
   }
 
   public static var _anyTypeUrl: Swift.String {
-    return "type.googleapis.com/google.cloud.parametermanager.v1.ListParametersRequest"
+    return "type.googleapis.com/google.cloud.parametermanager.v1.CreateTemplateRequest"
   }
   public init(fromAny any: GoogleWKT.`Any`) throws {
     self = try GoogleWKT._slowAnyDeserialize(Self.self, from: any)

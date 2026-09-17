@@ -15,23 +15,26 @@
 // limitations under the License.
 
 import Foundation
+@_spi(GoogleCloudInternal) import GoogleGax
 @_spi(GoogleCloudInternal) import GoogleWKT
 
-/// Message for storing a ParameterVersion resource's payload data
-public struct ParameterVersionPayload: Codable, Equatable, GoogleWKT._AnyPackable,
+/// Message for response to listing Templates
+public struct ListTemplatesResponse: Codable, Equatable, GoogleWKT._AnyPackable,
+  GoogleGax._PaginatedResponse,
   Sendable
 {
-  /// Required. bytes data for storing payload.
-  public var data: Foundation.Data = Foundation.Data()
+  /// The list of Templates
+  public var templates: [Template] = []
 
-  /// Optional. [Optional] The integrity checksum of the payload.
-  /// If provided, the server will verify that the checksum matches the payload.
-  /// If not provided, the server will generate the checksum.
-  public var dataCrc32C: Swift.Int64? = nil
+  /// A token identifying a page of results the server should return.
+  public var nextPageToken: Swift.String = Swift.String()
+
+  /// Unordered list. Locations that could not be reached.
+  public var unreachable: [Swift.String] = []
 
   @_spi(GoogleCloudInternal) public var _unknownFields: GoogleWKT._UnknownFields = .init()
 
-  /// Initialize a new instance of `ParameterVersionPayload`.
+  /// Initialize a new instance of `ListTemplatesResponse`.
   public init() {}
 
   /// Use `config` to return a new instance of this object, with some fields updated.
@@ -39,7 +42,7 @@ public struct ParameterVersionPayload: Codable, Equatable, GoogleWKT._AnyPackabl
   /// Commonly used to initialize the value, for example:
   ///
   /// ```
-  /// let value = ParameterVersionPayload().with { $0.data = ... }
+  /// let value = ListTemplatesResponse().with { $0.templates = ... }
   /// ```
   public func with(_ config: (inout Self) throws -> Swift.Void) rethrows -> Self {
     var copy = self
@@ -53,21 +56,28 @@ public struct ParameterVersionPayload: Codable, Equatable, GoogleWKT._AnyPackabl
     init(stringValue: Swift.String) { self.stringValue = stringValue }
     init?(intValue: Swift.Int) { nil }
 
-    static let data = CodingKeys(stringValue: "data")
-    static let dataCrc32C = CodingKeys(stringValue: "dataCrc32c")
+    static let templates = CodingKeys(stringValue: "templates")
+    static let nextPageToken = CodingKeys(stringValue: "nextPageToken")
+    static let unreachable = CodingKeys(stringValue: "unreachable")
 
     static let _knownKeys: Set<Swift.String> = [
-      "data",
-      "dataCrc32c",
+      "templates",
+      "nextPageToken",
+      "unreachable",
     ]
   }
 
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    if let value = try container.decodeIfPresent(Foundation.Data.self, forKey: .data) {
-      self.data = value
+    if let value = try container.decodeIfPresent([Template].self, forKey: .templates) {
+      self.templates = value
     }
-    self.dataCrc32C = try container.decodeIfPresent(Swift.Int64.self, forKey: .dataCrc32C)
+    if let value = try container.decodeIfPresent(Swift.String.self, forKey: .nextPageToken) {
+      self.nextPageToken = value
+    }
+    if let value = try container.decodeIfPresent([Swift.String].self, forKey: .unreachable) {
+      self.unreachable = value
+    }
     for key in container.allKeys where !CodingKeys._knownKeys.contains(key.stringValue) {
       self._unknownFields.json[key.stringValue] = try container.decode(
         GoogleWKT.Value.self, forKey: key)
@@ -76,20 +86,29 @@ public struct ParameterVersionPayload: Codable, Equatable, GoogleWKT._AnyPackabl
 
   public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
-    try container.encode(self.data, forKey: .data)
-    try container.encodeIfPresent(self.dataCrc32C, forKey: .dataCrc32C)
+    try container.encode(self.templates, forKey: .templates)
+    try container.encode(self.nextPageToken, forKey: .nextPageToken)
+    try container.encode(self.unreachable, forKey: .unreachable)
     for (key, value) in self._unknownFields.json {
       try container.encode(value, forKey: CodingKeys(stringValue: key))
     }
   }
 
   public static var _anyTypeUrl: Swift.String {
-    return "type.googleapis.com/google.cloud.parametermanager.v1.ParameterVersionPayload"
+    return "type.googleapis.com/google.cloud.parametermanager.v1.ListTemplatesResponse"
   }
   public init(fromAny any: GoogleWKT.`Any`) throws {
     self = try GoogleWKT._slowAnyDeserialize(Self.self, from: any)
   }
   public func _pack() throws -> GoogleWKT.Struct {
     return try GoogleWKT._slowAnySerialize(message: self)
+  }
+
+  public func _getPaginatedItems() -> [Template] {
+    return self.templates
+  }
+
+  public func _nextPageToken() -> Swift.String {
+    return self.nextPageToken
   }
 }
